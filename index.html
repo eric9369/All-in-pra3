@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>All-in | Bottom Area</title>
+		<link rel="shortcut icon" href="../favicon.ico">
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="css/bottom-area.css" />
+		<script src="js/modernizr.custom.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<!-- Top Navigation -->
+			<div class="codrops-top clearfix">
+				<a class="codrops-icon codrops-icon-prev" href="index.html"><span>All-in</span></a>
+				<span class="right"><a class="codrops-icon codrops-icon-drop" href="로그인.html"><span>로그인</span></a></span>
+				<span class="right"><a class="codrops-icon codrops-icon-drop" href="회원가입.html"><span>회원가입</span></a></span>
+			</div>
+			<div class="content">
+				<header class="codrops-header">
+					<span style = " font-size:4em; ">
+					<h1>All-in <span>세상의 모든 콘텐츠가 한눈에!</span></h1></span>
+					<nav class="codrops-demos">
+						<span style = " font-size:1.5em; ">
+						<a href="movie.html">영화</a>
+						<a href="drama.html">드라마</a>
+						<a href="animation.html">애니메이션</a>
+						<a href="webtoon.html">웹툰</a>
+						<a href="novel.html">소설</a>
+						<a href="music.html">음악</a>
+						<a href="index.html" onclick="alert('로그인 후 이용해주세요.')">내 보관함	</a>
+						</span>
+					</nav>
+				</header>
+				
+				
+			</div><!-- /content -->
+		</div><!-- /container -->
+		<div id="drop-area" class="drop-area">
+			<div>
+				<div class="drop-area__item"><div class="dummy"></div></div>
+				<div class="drop-area__item"><div class="dummy"></div></div>
+				<div class="drop-area__item"><div class="dummy"></div></div>
+				<div class="drop-area__item"><div class="dummy"></div></div>
+			</div>
+		</div>
+		<div class="drop-overlay"></div>
+		<script src="js/draggabilly.pkgd.min.js"></script>
+		<script src="js/dragdrop.js"></script>
+		<script>
+			(function() {
+				var body = document.body,
+					dropArea = document.getElementById( 'drop-area' ),
+					droppableArr = [], dropAreaTimeout;
+
+				// initialize droppables
+				[].slice.call( document.querySelectorAll( '#drop-area .drop-area__item' )).forEach( function( el ) {
+					droppableArr.push( new Droppable( el, {
+						onDrop : function( instance, draggableEl ) {
+							// show checkmark inside the droppabe element
+							classie.add( instance.el, 'drop-feedback' );
+							clearTimeout( instance.checkmarkTimeout );
+							instance.checkmarkTimeout = setTimeout( function() { 
+								classie.remove( instance.el, 'drop-feedback' );
+							}, 800 );
+							// ...
+						}
+					} ) );
+				} );
+
+				// initialize draggable(s)
+				[].slice.call(document.querySelectorAll( '#grid .grid__item' )).forEach( function( el ) {
+					new Draggable( el, droppableArr, {
+						draggabilly : { containment: document.body },
+						onStart : function() {
+							// add class 'drag-active' to body
+							classie.add( body, 'drag-active' );
+							// clear timeout: dropAreaTimeout (toggle drop area)
+							clearTimeout( dropAreaTimeout );
+							// show dropArea
+							classie.add( dropArea, 'show' );
+						},
+						onEnd : function( wasDropped ) {
+							var afterDropFn = function() {
+								// hide dropArea
+								classie.remove( dropArea, 'show' );
+								// remove class 'drag-active' from body
+								classie.remove( body, 'drag-active' );
+							};
+
+							if( !wasDropped ) {
+								afterDropFn();
+							}
+							else {
+								// after some time hide drop area and remove class 'drag-active' from body
+								clearTimeout( dropAreaTimeout );
+								dropAreaTimeout = setTimeout( afterDropFn, 400 );
+							}
+						}
+					} );
+				} );
+			})();
+		</script>
+	</body>
+</html>
